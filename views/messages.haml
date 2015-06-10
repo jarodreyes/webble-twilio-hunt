@@ -1,0 +1,7 @@
+.row
+  .small-12.small-centered.columns
+    .row
+      - @messages.each do |message|
+        .small-6.large-3.columns
+          .panel.radius
+            %h5= message.body
