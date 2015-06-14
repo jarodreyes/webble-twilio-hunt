@@ -134,42 +134,6 @@ post "/update-player" do
   sendMessage(@player_phone, @output)
 end
 
-get "/api/images.json" do
-  @tacos = Image.all
-  @tacos.to_json
-end
-
-# Register a subscriber through the web and send verification code
-route :get, :post, '/sms-register' do
-  @phone_number = Sanitize.clean(params[:From])
-  @body = params[:Body]
-  puts @error
-
-  if @error == false
-    user = AnonUser.first_or_create(:phone_number => @phone_number)
-    if not @body.nil?
-      user.messages.create(:body => @body)
-      user.save
-    end
-  end
-
-  @msg = "Hi! I am the Twilio-powered candy machine. Please let me know what would you like to have in the candy machine next month?"
-  message = @client.account.messages.create(
-    :from => @cowork_number,
-    :to => @phone_number,
-    :body => @msg
-  )
-  puts message.to
-  @msg2 = "This number was made intelligent using Twilio. See the code at: bit.ly/3rdCandy"
-  message = @client.account.messages.create(
-    :from => @cowork_number,
-    :to => @phone_number,
-    :body => @msg2
-  )
-  puts message.to
-
-end
-
 # Webble + Twilio webhook
 # Phone Number: 6692382267
 # Register a player nickname then receive their images
