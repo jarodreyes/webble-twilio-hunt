@@ -2,14 +2,14 @@
   .small-12.small-centered.columns
     .row
       %table.table.table-bordered
-          %thead
+        %thead
+          %tr
+            %th #
+            %th NickName
+            %th Points
+        %tbody
+          - @users.sort_by(&:points).each_with_index do |user, idx|
             %tr
-              %th #
-              %th NickName
-              %th Points
-          %tbody
-            - @users.sort_by(&:points).each_with_index do |user, idx|
-              %tr
-                %th= idx + 1
-                %td= user.nickname
-                %td= user.points
+              %th= idx + 1
+              %td= user.nickname
+              %td= user.points
