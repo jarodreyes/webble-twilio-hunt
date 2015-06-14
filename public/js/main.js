@@ -1,6 +1,6 @@
-showStatus = function(status) {
-  $('.options').hide();
-  $('.status').show().html(status);
+showStatus = function(e, status) {
+  $(e.currentTarget).parent('.options').hide();
+  $(e.currentTarget).parent().siblings('.status').show().html(status);
 }
 $(document).ready(function() {
   $('.accept').click(function(e) {
@@ -10,7 +10,7 @@ $(document).ready(function() {
     $.post('/update-player', { player_id: player, correct: true, image_id: image}, function(data) {
       console.log('sent');
     })
-    showStatus('Accepted');
+    showStatus(e, 'Accepted');
   });
   $('.reject').click(function(e) {
     e.preventDefault();
@@ -19,6 +19,6 @@ $(document).ready(function() {
     $.post('/update-player', { player_id: player, correct: false, image_id: image}, function(data) {
       console.log('sent');
     })
-    showStatus('Rejected');
+    showStatus(e, 'Rejected');
   });
 })
