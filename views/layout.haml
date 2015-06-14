@@ -28,18 +28,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         </button>
-        %a.navbar-brand{:href => "#"} Brand
+        %a.navbar-brand{:href => "#"} Webble Hunt
       .collapse.navbar-collapse.navbar-ex1-collapse
         %ul.nav.navbar-nav
-          %li.active
-            %a{:href => "#"} Home
           %li
-            %a{:href => "#about"} About
+            %a{:href => "/players"} Players
           %li
-            %a{:href => "#contact"} Contact
-        %p.navbar-text.pull-right
-          Logged in as
-          %a{:href => "#"} username
+            %a{:href => "/images"} Images
     #content.container  
       =yield
     /

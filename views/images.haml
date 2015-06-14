@@ -1,0 +1,12 @@
+.row
+  .small-12.small-centered.columns
+    .row
+      - @images.each do |image|
+        - if image.accepted.nil?
+          .col-md-3
+            .thumbnail
+              %img{:src => "#{image.url}"}
+                .caption.options
+                  %a.btn.btn-success.accept{:href => "#", :data_id => "#{image.hunt_player.id}", :image_id => "#{image.id}"} Accept
+                  %a.btn.btn-danger.pull-right.reject{:href => "#", :data_id => "#{image.hunt_player.id}", :image_id => "#{image.id}"} Reject
+                .caption.status{:style => "display:hidden;"}
