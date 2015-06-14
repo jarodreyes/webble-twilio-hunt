@@ -113,25 +113,28 @@ post "/update-player" do
   @player_phone = @player.phone_number
 
   @image = Image.get(image_id)
-  @image.update(:accepted => correct)
 
-  if correct
-    # Score this point
-    if not @player.nil?
-      @points = @player.points + 1
-      puts "******************* points: #{@points} **********************"
-      @player.update(:points => @points)
-    end
+  if @image.accepted.nil?
+    @image.update(:accepted => correct)
 
-    if @player.points >= 20
-      @output = "Congratulations! You found all of the clues!"
+    if correct
+      # Score this point
+      if not @player.nil?
+        @points = @player.points + 1
+        puts "******************* points: #{@points} **********************"
+        @player.update(:points => @points)
+      end
+
+      if @player.points >= 20
+        @output = "Congratulations! You found all of the clues!"
+      else
+        @output = "Well done! You found one of the beacons. Now go find some more!"
+      end
     else
-      @output = "Well done! You found one of the beacons. Now go find some more!"
+      @output = "Looks like that guess wasn't right. You're very close though!"
     end
-  else
-    @output = "Looks like that guess wasn't right. You're very close though!"
+    sendMessage(@player_phone, @output)
   end
-  sendMessage(@player_phone, @output)
 end
 
 # Webble + Twilio webhook
