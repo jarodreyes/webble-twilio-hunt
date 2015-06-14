@@ -197,55 +197,57 @@ route :get, :post, '/hunt' do
 
     if @body == 'instructions'
       @output = helpMsg
-    end
+    else
+      # switch based on 'where' in the game the user is.
+      case status
 
-    # switch based on 'where' in the game the user is.
-    case status
+      # Setup the player details
+      when :new
+        @output = "Welcome to the StartupWeek Scavenger Hunt, brought to you by Webble and Twilio. To get started, what will your super awesome nickname be?"
+        @player.update(:status => 'naming')
 
-    # Setup the player details
-    when :new
-      @output = "Welcome to the StartupWeek Scavenger Hunt, brought to you by Webble and Twilio. To get started, what will your super awesome nickname be?"
-      @player.update(:status => 'naming')
-
-    # Get Player NickName
-    when :naming
-      if @player.nickname.nil?
-        @player.nickname = @bodyRaw
-        @player.save
-        @output = "We have your nickname as #{@bodyRaw}. Is this correct? [yes] or [no]?"
-      else
-        if @body == 'yes'
-          puts "Sending #{@player.nickname} a clue."
-          @output = helpMsg
-
-          @player.update(:status => 'hunting')
+      # Get Player NickName
+      when :naming
+        if @player.nickname.nil?
+          @player.nickname = @bodyRaw
+          @player.save
+          @output = "We have your nickname as #{@bodyRaw}. Is this correct? [yes] or [no]?"
         else
-          @output = "Okay I guess we've got that wrong. What is your nickname then?"
-          @player.update(:nickname => nil)
+          if @body == 'yes'
+            puts "Sending #{@player.nickname} a clue."
+            @output = helpMsg
+
+            @player.update(:status => 'hunting')
+          else
+            @output = "Okay I guess we've got that wrong. What is your nickname then?"
+            @player.update(:nickname => nil)
+          end
         end
-      end
 
-    # When the user is hunting
-    when :hunting
-      @media = params[:MediaUrl0]
-      puts "******************* Media: #{@media} **********************"
-      puts "******************* params: #{params} **********************"
+      # When the user is hunting
+      when :hunting
+        @media = params[:MediaUrl0]
+        puts "******************* Media: #{@media} **********************"
+        puts "******************* params: #{params} **********************"
 
-      # No picture was sent
-      if @media.nil?
-        @output = "Sorry, but to prove you found the clue, please send us a picture with the object in the beacons photo."
+        # No picture was sent
+        if @media.nil?
+          @output = "Sorry, but to prove you found the clue, please send us a picture with the object in the beacons photo."
 
-      # Okay we got a picture
-      else
-        @player.images.create(:url => @media)
-        @player.save
+        # Okay we got a picture
+        else
+          @player.images.create(:url => @media)
+          @player.save
 
-        @output = "Okay we got your image. One of our judges will check to make sure it is correct. We'll text you when they have confirmed it! In the meantime keep hunting!"
+          @output = "Okay we got your image. One of our judges will check to make sure it is correct. We'll text you when they have confirmed it! In the meantime keep hunting!"
+        end
+
       end
 
     end
+
+  # Error occurred
   else
-    # Looks like there was an error
     sendAdminMessage(@error)
 
   end
